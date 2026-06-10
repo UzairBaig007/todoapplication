@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum TodoStatus {
+  pending
+  in_progress
+  done
+}
+
+model Todo {
+  id        Int        @id @default(autoincrement())
+  title     String
+  note      String?
+  status    TodoStatus @default(pending)
+  createdAt DateTime   @default(now())
+}
