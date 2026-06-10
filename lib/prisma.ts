@@ -1,4 +1,5 @@
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaClient } from "@/app/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
@@ -6,9 +7,17 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL ?? "file:./dev.db",
-  });
+  const databaseUrl = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
+
+  if (databaseUrl.startsWith("libsql://")) {
+    const adapter = new PrismaLibSql({
+      url: databaseUrl,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+    return new PrismaClient({ adapter });
+  }
+
+  const adapter = new PrismaBetterSqlite3({ url: databaseUrl });
   return new PrismaClient({ adapter });
 }
 
