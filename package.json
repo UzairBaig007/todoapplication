@@ -11,7 +11,7 @@
     "postinstall": "prisma generate",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "vercel-build": "prisma migrate deploy && next build"
+    "vercel-build": "next build"
   },
   "dependencies": {
     "@libsql/client": "^0.17.3",
