@@ -19,7 +19,7 @@ test.describe("Todo status", () => {
 
   test("Mark todo as done with confirmation", async ({ page }) => {
     const todoPage = new TodoPage(page);
-    await todoPage.addTodo("Ship release");
+    await todoPage.addTodo("Ship lalalala");
 
     await todoPage.markDoneWithConfirmation("Ship release");
     await todoPage.expectStatus("Ship release", "Done");
