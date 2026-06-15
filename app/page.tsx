@@ -7,7 +7,7 @@ export default function Home() {
       <main className="w-full max-w-lg">
         <header className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            Todos
+            My Todo App
           </h1>
           <p className="mt-1 text-sm text-zinc-500">
             Manage tasks with status, notes, and editing.
