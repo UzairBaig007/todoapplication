@@ -222,10 +222,20 @@ to:
     await resetDatabase(request, baseURL);
 ```
 
-- [ ] **Step 7: Run the existing suite to confirm the expected interim failure**
+- [ ] **Step 7: Confirm the expected interim breakage (don't fix it)**
 
-Run: `npm test`
-Expected: **these tests will now fail** — `Todo.userId` is a required column with no default, but `createTodo` in `app/actions.ts` doesn't supply it yet, so every test that adds a todo (most of them) will error. This is expected and intentional: this column requirement is exactly what forces the user-scoping work in Task 7. Confirm the failures are all the same root cause (missing `userId`), then proceed — do not try to fix it here.
+`Todo.userId` is now a required column, but `createTodo` in `app/actions.ts` doesn't supply it yet — and since `next build` type-checks before starting the server, this isn't just a future runtime failure, it's a TypeScript compile error that will block the production build `npm test` depends on (via Playwright's `webServer`). Confirm this directly instead of running the full suite:
+
+Run: `npx tsc --noEmit`
+Expected: FAIL, with an error in `app/actions.ts` similar to:
+```
+Type error: Argument of type '{ title: string; note: string | null; }' is not assignable to parameter of type ...
+  Property 'userId' is missing in type '{ title: string; note: string | null; }' ...
+```
+
+This confirms the root cause. This is expected and intentional — it's exactly what forces the user-scoping work in Task 7. Do not try to fix `app/actions.ts` here, and do not run `npm test` in this task (it will fail to even build until Task 7).
+
+Note: if `prisma/test.db` already has data from before this schema change (a local gitignored artifact, not part of this repo's tracked state), the migration may also fail to apply to it for the same reason `dev.db` needed resetting in Step 2. If so, delete it the same way: `rm -f prisma/test.db prisma/test.db-journal`.
 
 - [ ] **Step 8: Commit**
 
@@ -1312,10 +1322,12 @@ test.describe("Per-user todo isolation", () => {
 });
 ```
 
-- [ ] **Step 7: Run the spec to verify it fails**
+- [ ] **Step 7: Confirm the spec can't pass yet**
 
-Run: `npx playwright test tests/specs/todo-isolation.spec.ts`
-Expected: FAIL — `addTodo` errors because `createTodo` doesn't supply the now-required `userId` yet (same root cause flagged in Task 2)
+`app/actions.ts` still doesn't supply `userId`, so `next build` still fails to type-check (same root cause as Task 2 Step 7) — which means Playwright's `webServer` can't even start, so this spec (and every other spec) would fail at the "server didn't come up" stage rather than with a clean per-test assertion failure. Don't run the full Playwright suite yet; just confirm the build is still broken for the expected reason:
+
+Run: `npx tsc --noEmit`
+Expected: FAIL, same `app/actions.ts` "Property 'userId' is missing" error as in Task 2 Step 7 — confirming Steps 8-9 below are still needed before anything can run.
 
 - [ ] **Step 8: Scope todo actions to the session user**
 
