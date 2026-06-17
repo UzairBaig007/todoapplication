@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -16,10 +13,20 @@ enum TodoStatus {
   done
 }
 
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  todos     Todo[]
+}
+
 model Todo {
   id        Int        @id @default(autoincrement())
   title     String
   note      String?
   status    TodoStatus @default(pending)
   createdAt DateTime   @default(now())
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
