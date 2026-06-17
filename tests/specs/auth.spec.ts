@@ -36,6 +36,7 @@ test.describe('Auth — signup', () => {
     const context = await browser.newContext()
     const page = await context.newPage()
     await page.goto('/signup')
+    await page.waitForURL('/signup')
     await page.getByTestId('email-input').fill('user@example.com')
     await page.getByTestId('password-input').fill('Password123!')
     await page.getByTestId('confirm-password-input').fill('Different123!')
@@ -44,13 +45,17 @@ test.describe('Auth — signup', () => {
     await context.close()
   })
 
-  test('signup shows error when email already exists', async ({ page }) => {
+  test('signup shows error when email already exists', async ({ browser }) => {
+    const context = await browser.newContext()
+    const page = await context.newPage()
     await page.goto('/signup')
+    await page.waitForURL('/signup')
     await page.getByTestId('email-input').fill('test@example.com')
     await page.getByTestId('password-input').fill('Password123!')
     await page.getByTestId('confirm-password-input').fill('Password123!')
     await page.getByTestId('submit-button').click()
     await expect(page.getByText('An account with this email already exists.')).toBeVisible()
+    await context.close()
   })
 })
 
