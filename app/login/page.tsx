@@ -6,7 +6,7 @@ export default function LoginPage() {
       <main className="w-full max-w-sm">
         <header className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">Sign In</h1>
-          <p className="mt-1 text-sm text-zinc-500">Welcome back to Uzair Todo App.</p>
+          <p className="mt-1 text-sm text-zinc-500">Welcome back to Uzair Baig Todo App.</p>
         </header>
         <LoginForm />
       </main>

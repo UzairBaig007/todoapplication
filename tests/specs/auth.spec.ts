@@ -28,7 +28,7 @@ test.describe('Auth — signup', () => {
     await page.getByTestId('confirm-password-input').fill('NewPass123!')
     await page.getByTestId('submit-button').click()
     await expect(page).toHaveURL('/')
-    await expect(page.getByRole('heading', { name: 'Uzair Todo App' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Uzair Baig Todo App' })).toBeVisible()
     await context.close()
   })
 
@@ -76,7 +76,7 @@ test.describe('Auth — login', () => {
     await page.getByTestId('password-input').fill('TestPass123!')
     await page.getByTestId('submit-button').click()
     await expect(page).toHaveURL('/')
-    await expect(page.getByRole('heading', { name: 'Uzair Todo App' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Uzair Baig Todo App' })).toBeVisible()
     await context.close()
   })
 
