@@ -6,7 +6,7 @@ export class TodoPage {
   async goto() {
     await this.page.goto('/')
     await this.page.waitForURL('/')
-    await expect(this.page.getByRole('heading', { name: 'My Second Todo App' })).toBeVisible()
+    await expect(this.page.getByRole('heading', { name: 'My Third Todo App' })).toBeVisible()
   }
 
   async addTodo(title: string, note?: string) {
