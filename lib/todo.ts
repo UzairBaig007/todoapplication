@@ -32,3 +32,28 @@ export function getTitleStyles(status: TodoStatus): string {
   }
   return "text-foreground";
 }
+
+export const TODO_PRIORITIES = ["low", "medium", "high"] as const;
+
+export type TodoPriority = (typeof TODO_PRIORITIES)[number];
+
+export const PRIORITY_LABELS: Record<TodoPriority, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+};
+
+export function isPriority(value: string): value is TodoPriority {
+  return TODO_PRIORITIES.includes(value as TodoPriority);
+}
+
+export function getPriorityBadgeStyles(priority: TodoPriority): string {
+  switch (priority) {
+    case "high":
+      return "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400";
+    case "medium":
+      return "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400";
+    case "low":
+      return "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400";
+  }
+}
