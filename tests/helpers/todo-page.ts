@@ -143,4 +143,35 @@ export class TodoPage {
   async selectFilter(filter: 'all' | 'pending' | 'in_progress' | 'done') {
     await this.page.getByTestId(`filter-${filter}`).click()
   }
+
+  async addTodoWithPriority(title: string, priority: 'low' | 'medium' | 'high', note?: string) {
+    await this.page.getByTestId('todo-title-input').fill(title)
+    if (note !== undefined) {
+      await this.page.getByTestId('todo-note-input').fill(note)
+    }
+    await this.page.getByTestId('todo-priority-select').selectOption(priority)
+    await this.page.getByTestId('todo-add-button').click()
+    await this.waitForTodo(title)
+  }
+
+  async expectPriority(title: string, priority: 'low' | 'medium' | 'high') {
+    await expect(
+      this.todoItem(title).getByTestId('todo-priority-badge'),
+    ).toHaveText(priority.charAt(0).toUpperCase() + priority.slice(1))
+  }
+
+  async selectPriorityFilter(priority: 'low' | 'medium' | 'high') {
+    await this.page.getByTestId(`priority-filter-${priority}`).click()
+  }
+
+  async setSortOrder(order: 'none' | 'high-first' | 'low-first') {
+    await this.page.getByTestId('priority-sort-select').selectOption(order)
+  }
+
+  async editPriority(title: string, priority: 'low' | 'medium' | 'high') {
+    await this.openEdit(title)
+    await this.page.getByTestId('edit-priority-select').selectOption(priority)
+    await this.page.getByTestId('edit-modal-save').click()
+    await expect(this.page.getByTestId('edit-modal')).toHaveCount(0)
+  }
 }

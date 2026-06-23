@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { createTodo } from "@/app/actions";
+import { TODO_PRIORITIES, PRIORITY_LABELS } from "@/lib/todo";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -55,6 +56,24 @@ export function TodoForm() {
         data-testid="todo-note-input"
         className={`resize-none ${inputClassName}`}
       />
+      <div>
+        <label htmlFor="todo-priority" className="mb-1 block text-xs text-zinc-500">
+          Priority
+        </label>
+        <select
+          id="todo-priority"
+          name="priority"
+          defaultValue="medium"
+          data-testid="todo-priority-select"
+          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-foreground outline-none ring-foreground/20 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900"
+        >
+          {TODO_PRIORITIES.map((p) => (
+            <option key={p} value={p}>
+              {PRIORITY_LABELS[p]}
+            </option>
+          ))}
+        </select>
+      </div>
     </form>
   );
 }

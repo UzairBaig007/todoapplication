@@ -10,8 +10,11 @@ import type { Todo } from "@/app/generated/prisma/client";
 import {
   getTitleStyles,
   getTodoItemStyles,
+  getPriorityBadgeStyles,
+  PRIORITY_LABELS,
   STATUS_LABELS,
   TODO_STATUSES,
+  type TodoPriority,
   type TodoStatus,
 } from "@/lib/todo";
 import { ConfirmModal } from "./ConfirmModal";
@@ -24,6 +27,7 @@ export function TodoItem({ todo }: { todo: Todo }) {
   const [isPending, startTransition] = useTransition();
 
   const status = todo.status as TodoStatus;
+  const priority = (todo.priority as TodoPriority) ?? "medium";
 
   function handleStatusChange(newStatus: TodoStatus) {
     if (newStatus === status) return;
@@ -55,10 +59,11 @@ export function TodoItem({ todo }: { todo: Todo }) {
   function handleEditSave(
     title: string,
     note: string,
+    newPriority: TodoPriority,
     setError: (message: string | null) => void,
   ) {
     startTransition(async () => {
-      const result = await updateTodo(todo.id, title, note);
+      const result = await updateTodo(todo.id, title, note, newPriority);
       if (!result.ok) {
         setError(result.error);
         return;
@@ -100,6 +105,14 @@ export function TodoItem({ todo }: { todo: Todo }) {
           >
             {todo.title}
           </span>
+
+          <span
+            data-testid="todo-priority-badge"
+            className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${getPriorityBadgeStyles(priority)}`}
+          >
+            {PRIORITY_LABELS[priority]}
+          </span>
+
           {todo.note && (
             <p
               data-testid="todo-item-note"

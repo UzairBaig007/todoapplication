@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { verifySession } from '@/lib/dal'
-import { isTodoStatus, type TodoStatus } from '@/lib/todo'
+import { isTodoStatus, isPriority, type TodoStatus, type TodoPriority } from '@/lib/todo'
 
 export async function createTodo(formData: FormData) {
   const { userId } = await verifySession()
@@ -11,9 +11,11 @@ export async function createTodo(formData: FormData) {
   if (!title) return
 
   const note = formData.get('note')?.toString().trim() || null
+  const rawPriority = formData.get('priority')?.toString() ?? ''
+  const priority: TodoPriority = isPriority(rawPriority) ? rawPriority : 'medium'
 
   await prisma.todo.create({
-    data: { title, note, userId },
+    data: { title, note, priority, userId },
   })
   revalidatePath('/')
 }
@@ -33,6 +35,7 @@ export async function updateTodo(
   id: number,
   title: string,
   note: string | null,
+  priority: TodoPriority,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const { userId } = await verifySession()
   const trimmedTitle = title.trim()
@@ -44,7 +47,7 @@ export async function updateTodo(
 
   await prisma.todo.update({
     where: { id, userId },
-    data: { title: trimmedTitle, note: trimmedNote },
+    data: { title: trimmedTitle, note: trimmedNote, priority },
   })
   revalidatePath('/')
   return { ok: true }

@@ -13,6 +13,12 @@ enum TodoStatus {
   done
 }
 
+enum Priority {
+  low
+  medium
+  high
+}
+
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
@@ -26,6 +32,7 @@ model Todo {
   title     String
   note      String?
   status    TodoStatus @default(pending)
+  priority  Priority   @default(medium)
   createdAt DateTime   @default(now())
   userId    Int
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
