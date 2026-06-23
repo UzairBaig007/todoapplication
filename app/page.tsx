@@ -16,7 +16,7 @@ export default async function Home() {
         <header className="mb-8 flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-              My Second Todo App
+              My First Todo App
             </h1>
             <p className="mt-1 text-sm text-zinc-500">
               Manage tasks with status, notes, and editing.
