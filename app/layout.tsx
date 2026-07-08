@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sidra Todo App",
+  title: "Uzair Baig Todo App",
   description: "A simple todo list powered by Next.js and Prisma",
 };
 
